@@ -26,7 +26,7 @@ class CalculatorApp:
         }
         self.buttons_func = {
             '+': (2,3), '-': (2,4),
-            'x': (3,3), '/': (3,4)
+            '*': (3,3), '/': (3,4)
         }
 
         self.style = ttk.Style()
@@ -55,7 +55,7 @@ class CalculatorApp:
                              foreground='white',
                              borderwidth=1) 
         self.style.map('Equal.TButton',
-                       background=[('active',  "#2B5F43"), ('!active', "#3E8A60")],
+                       background=[('active',  "#377C57"), ('!active', "#61D897")],
                        foreground=[('active', 'white'), ('!active', 'black')])
         
         for num, tupl in self.buttons_num.items():
@@ -65,18 +65,39 @@ class CalculatorApp:
         for func, tupl in self.buttons_func.items():
             btn = ttk.Button(self.master, text=func, command=lambda b=func: self._click_button(b))
             btn.grid(row=tupl[0], column=tupl[1], padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
+
+        self.brcts_button_o = ttk.Button(self.master, text='(', command=lambda b='(':self._click_button(b))
+        self.brcts_button_o.grid(row=4, column=2, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
+
+        self.brcts_button_o = ttk.Button(self.master, text=')', command=lambda b=')':self._click_button(b))
+        self.brcts_button_o.grid(row=4, column=3, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
         
         self.c_btn = ttk.Button(self.master, text='C', style='C.TButton', command=self._clear_display)
-        self.c_btn.grid(row=1, column=3, columnspan=2, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
+        self.c_btn.grid(row=1, column=4, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
+
+        self.pop_btn = ttk.Button(self.master, text='<-', command=self._del_one)
+        self.pop_btn.grid(row=1, column=3, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
 
         self.return_button = ttk.Button(self.master, text='=', style='Equal.TButton', command=self._return_button)
-        self.return_button.grid(row=4, column=2, columnspan=3, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
-    
+        self.return_button.grid(row=4, column=4, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
+
+    def _del_one(self):
+        self.current_input = self.current_input[:-1]
+        if self.current_input:
+            self.display.delete(0, tk.END)
+            self.display.insert(0, self.current_input)
+        else:
+            self.display.delete(0, tk.END)
+            self.display.insert(0, '0')
+
     def _click_button(self,b):
         if self.current_input == '0':
             self.current_input = b
-        elif b =='x':
-            self.current_input += '*'   
+        elif b in self.buttons_func.keys():
+            if self.current_input[-1] not in self.buttons_func.keys():
+                self.current_input += b
+            else: 
+                self.current_input = self.current_input[:-1] + b
         elif b == '.':
             operators = ['*','-','+','/']
             idx_op = int()
@@ -84,15 +105,12 @@ class CalculatorApp:
                 if i in self.current_input:
                     if idx_op < self.current_input.rfind(i):
                         idx_op = self.current_input.rfind(i)
-
             if idx_op:
                 if b not in self.current_input[idx_op+1:]:
                     self.current_input += b
-                
             else:
                 if b not in self.current_input:
                     self.current_input += b
-
         else:
             self.current_input += b
 
