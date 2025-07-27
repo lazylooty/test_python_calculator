@@ -4,7 +4,6 @@ from tkinter import ttk
 class CalculatorApp:
     def __init__(self,master):
         self.master = master
-        self.inputdata = ''
         self.master.title('Calculator')
         self.master.iconbitmap('main.ico')
         self.master.geometry('400x400')
@@ -69,8 +68,8 @@ class CalculatorApp:
         self.brcts_button_o = ttk.Button(self.master, text='(', command=lambda b='(':self._click_button(b))
         self.brcts_button_o.grid(row=4, column=2, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
 
-        self.brcts_button_o = ttk.Button(self.master, text=')', command=lambda b=')':self._click_button(b))
-        self.brcts_button_o.grid(row=4, column=3, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
+        self.brcts_button_c = ttk.Button(self.master, text=')', command=lambda b=')':self._click_button(b))
+        self.brcts_button_c.grid(row=4, column=3, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
         
         self.c_btn = ttk.Button(self.master, text='C', style='C.TButton', command=self._clear_display)
         self.c_btn.grid(row=1, column=4, padx=5, pady=5, ipady=5, ipadx=5, sticky='nsew')
@@ -99,7 +98,7 @@ class CalculatorApp:
             else: 
                 self.current_input = self.current_input[:-1] + b
         elif b == '.':
-            operators = ['*','-','+','/']
+            operators = ['*','-','+','/','(',')']
             idx_op = int()
             for i in operators:
                 if i in self.current_input:
